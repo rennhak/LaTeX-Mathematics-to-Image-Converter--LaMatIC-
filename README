@@ -1,0 +1,45 @@
+LaTeX Mathematics Image Generator
+---------------------------------
+
+
+Requirements
+------------
+
+  o Ruby
+  o GNU/Linux System
+  o LaTeX
+
+
+Examples
+--------
+
+% ruby lib/Battery.rb -h
+
+
+Development
+-----------
+
+% rake -T 
+(in /home/br/projects/Battery)
+  rake all                 # Default Task - Run cucumber and rspec with rcov
+  rake clean               # Clean up temporary data
+  rake cucumber            # Run Cucumber features
+  rake flay                # Flay the code
+  rake flog                # Flog the code
+  rake rcov:all            # Run both specs and features to generate aggregated coverage
+  rake rcov:clobber_rspec  # Remove rcov products for rspec
+  rake rcov:cucumber       # Run Cucumber features
+  rake rcov:rspec          # Run specs using RCov
+  rake yardoc              # Generate Yardoc documentation
+
+
+
+Copyright
+---------
+
+(c) 2011, Bjoern Rennhak, under a triple license
+
+                o MIT licence. http://www.opensource.org/licenses/mit-license.php
+                o GPLv2 license
+                o BSD license
+
