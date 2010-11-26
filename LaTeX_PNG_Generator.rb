@@ -17,7 +17,7 @@ class SnippetGenerator # {{{
 
     # Minimal configuration
     @config                       = OpenStruct.new
-    @config.tmp_dir               = "tmp"
+    @config.tmp_dir               = "/tmp"
     @config.png_dir               = "pngs"
     @config.default_fn            = "formula"
 
@@ -28,7 +28,7 @@ class SnippetGenerator # {{{
       unless( @options.latex.empty? )
 
         @options.latex.each_with_index do |formula, index|
-          clean
+          # clean
           texify formula, index
         end
 
@@ -40,18 +40,20 @@ class SnippetGenerator # {{{
 
   def clean # {{{
     # create tmp dir in local folder
-    `rm -rf #{@config.tmp_dir}` unless( Dir[ @config.tmp_dir ].empty? )
+    `rm -rfv #{@config.tmp_dir}` unless( Dir[ @config.tmp_dir ].empty? )
     Dir.mkdir( @config.tmp_dir )
 
     puts "Do you want to delete the folder ./#{@config.png_dir} ?"
-    `rm -rfI #{@config.png_dir}`
+    `rm -rfIv #{@config.png_dir}`
     Dir.mkdir( @config.png_dir )
   end # }}}
 
+
   def texify formula, index # {{{
 
-    template_start  = "\\documentclass[30pt]{article}\n\\pagestyle{empty}\n\\begin{document}\n\\begin{displaymath}\n"
-    template_stop   = "\\end{displaymath}\n\\end{document}"
+    usepackages     = "\\usepackage{color}\n\\definecolor{white}{rgb}{1,1,1}\n\\definecolor{black}{rgb}{0,0,0}\n"
+    template_start  = "\\documentclass[30pt]{article}\n#{usepackages.to_s}\\pagestyle{empty}\n\\begin{document}\n{\\color{#{@options.font_color}}\n\\begin{displaymath}\n"
+    template_stop   = "\\end{displaymath}}\n\\end{document}"
 
     Dir.chdir( @config.tmp_dir ) do |d|
 
@@ -65,13 +67,14 @@ class SnippetGenerator # {{{
         f.write template_stop
       end # of File
 
-
       `texi2dvi #{tex_filename}`
       `dvips -E #{tex_filename.gsub( ".tex", ".dvi" ) }`
       `convert -density 400x400 #{tex_filename.gsub( ".tex", ".ps" )} #{tex_filename.gsub( ".tex", ".png" )}`
 
+      puts "File written to #{@config.tmp_dir}/#{tex_filename.gsub( ".tex", ".png" )}"
     end # of Dir.
   end # }}}
+
 
   # = The function 'parse_cmd_arguments' takes a number of arbitrary commandline arguments and parses them into a proper data structure via optparse
   # @param args Ruby's STDIN.ARGS from commandline
@@ -83,6 +86,7 @@ class SnippetGenerator # {{{
 
     # Define default options
     options.latex                     = []
+    options.font_color                = ""
 
     pristine_options                  = options.dup!
 
@@ -94,6 +98,10 @@ class SnippetGenerator # {{{
 
       opts.on("-g", "--generate-png-from-latex OPT", "Generate PNG file from LaTeX input OPT" ) do |d|
         options.latex << d
+      end
+
+      opts.on("-f", "--font-color OPT", "Use font color (e.g. black, white)" ) do |c|
+        options.font_color = c
       end
 
       opts.on_tail("-h", "--help", "Show this message") do
