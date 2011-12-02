@@ -1,20 +1,24 @@
 LaTeX Mathematics Image Generator
 ---------------------------------
 
+This tool helps you to generate beautiful mathematics snippets for your e.g. PowerPoint presentation without
+the need to use the builtin tools for that. You can e.g. just copy & paste from your research paper
+tex onto the CLI to generate a high quality PNG image from it.
+
 
 Requirements
 ------------
 
   o Ruby
   o GNU/Linux System
-  o LaTeX
+  o LaTeX (tex2dvi, dvips)
+  o Imagemagick (covnert)
 
 
 Examples
 --------
 
-% ruby lib/Battery.rb -h
-
+% ./LaTeX_PNG_Generator.rb -f white -g "W_k = \sum\limits_{r=1}^{k} \sum\limits_{i,i' \in C_r} d_{ii'}  \\ \forall r \in [1,k]"
 
 Development
 -----------
@@ -32,6 +36,11 @@ Development
   rake rcov:rspec          # Run specs using RCov
   rake yardoc              # Generate Yardoc documentation
 
+
+Code Quality
+------------
+
+Current code quality is kind of hack status. This needs severe improvement with rspec, cucumber etc.
 
 
 Copyright
